@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  body{
+    background-color: rgba(0, 0, 0, 0.929);
+    font-family: Arial, Helvetica, sans-serif;
+    border: 0;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+  h1 {
+    color : #fff;
+  }
+  button {
+    cursor: pointer;
+  }
+  .btn {
+    font-size: 5rem;
+    background-color: rgba(0, 0, 0, 0);
+    border: 3px solid rgb(14, 169, 133);
+    border-radius: 50%;
+    margin-right: 10px;
+    transition: .5s;
+  }
+  .btn:hover {
+    transition: .5s;
+    transform: scale(1.15);
+    background-color: yellowgreen;
+  }
+  #info{
+    margin: 20px;
+  }
+  #info > p{
+    color: white;
+    font-weight: bolder;
+    font-size: 20px;
+  }
+  #rest{
+    background-color: rgb(14, 169, 133);
+    border: none;
+    border-radius: 20px;
+    width: 8rem;
+    height: 3rem;
+    color: #fff;
+    font-weight: bolder;
+    transition: 1s;
+  }
+  #rest:hover{
+    transition: 1s;
+    background-color: rgb(234, 13, 13);
+  }
+</style>
+<body>
+  <h1>Rock Paper Scissors</h1>
+  <div class="container">
+    <div>
+      <button onclick="update(1)" class="btn">✊</button>
+      <button onclick="update(2)" class="btn">🖐</button>
+      <button onclick="update(3)" class="btn">✌️</button>
+    </div>
+    <div id="info">
+      <p id="score-bord">Score</p>
+      <button onclick="reset_store()" id="rest">
+        Reset Store
+      </button>
+    </div>
+  </div>
+  <script>
+    const score = JSON.parse(localStorage.getItem('score')) || {wins:0, losses:0, ties:0};
+
+    function show(bool, bdool) {
+      var btn = document.getElementById('score-bord');
+      var divi = document.getElementById('info');
+      if(bool && bdool == false)
+        btn.innerText = `You Win😁\nWins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+      else if(bool && bdool) btn.innerText = `You Ties🥲\nWins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+      else
+      btn.innerText = `You Lose😭\nWins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`;
+    }
+
+    function update(player) {
+      let computer = Math.round((99*Math.random() + 1))%4;
+      let fa = false;
+      let bdool = false;
+      if(Math.abs(score.wins - score.losses) >= 10) {
+        reset_store();
+        return;
+      }
+      if(player == computer) {score.ties++; bdool = true; fa = true;}
+      else if(player == 1 && computer == 3) {score.wins++; fa = true;}
+      else if(player == 2 && computer == 1) {score.wins++; fa = true;}
+      else if(player == 3 && computer == 2) {score.wins++; fa = true;}
+      else score.losses++; 
+      console.log(`Wins: ${score.wins}, Losses: ${score.losses}, Ties: ${score.ties}`);
+      show(fa, bdool);
+      localStorage.setItem('score',JSON.stringify(score));
+    }
+
+    function reset_store(){
+      let valW = score.wins;
+      let valL = score.losses;
+      let valT = score.ties;
+      score.wins = 0;
+      score.losses = 0;
+      score.ties = 0;
+      let btn = document.getElementById('score-bord');
+      if(valW == valL)
+      btn.innerText = `Tie🥵\nWins: ${0}, Losses: ${0}, Ties: ${0}`;
+      else
+      btn.innerText = `Wins: ${valW}, Losses: ${valL}, Ties: ${valT}\nGame Over\n\nWinner: ${valW > valL ? 'You💪🏽😎': 'Computer💪🏽💻'}`;
+      localStorage.setItem('score',JSON.stringify(score));
+    }
+
+  </script>
+</body>
+</html>
